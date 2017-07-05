@@ -1,0 +1,39 @@
+#define paginate(totalPage,currentPage,link)
+	#if(totalPage<=0||currentPage>totalPage) #return #end
+	#setLocal(startPage=currentPage-4) 
+	#if(startPage<1) 
+		#setLocal(startPage=1) 
+	#end
+	#setLocal(endPage=currentPage+4)
+	#if(endPage>totalPage) 
+		#setLocal(endPage=totalPage) 
+	#end
+	 <nav aria-label="Page navigation">
+		<ul class="pagination">
+		#if(startPage==1)
+			<li><a href="#(ctx??)#(link)#(startPage)#(append)" aria-label="Previous"> <span
+					aria-hidden="true">&laquo;</span>
+			</a></li> 
+		#else
+			<li><a href="#(ctx??)#(link)#(currentPage - 1)#(append)" aria-label="Previous"> <span
+					aria-hidden="true">&laquo;</span>
+			</a></li>
+		#end
+		#for(i:[startPage..endPage])
+			#if(currentPage==i)
+				<li class="active"><a href="#(ctx??)#(link)#(i)#(append)">#(i)</a></li>
+			#else
+				<li><a href="#(ctx??)#(link)#(i)#(append)">#(i)</a></li>
+			#end
+		#end
+		#if(currentPage==endPage)
+			<li><a href="#(ctx??)#(link)#(endPage)#(append)" aria-label="Next"> <span
+					aria-hidden="true">&raquo;</span>
+			</a></li> 
+		#else
+			<li><a href="#(ctx??)#(link)#(currentPage + 1)#(append)" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+			</a></li> 
+		#end
+		</ul>
+	</nav>
+#end

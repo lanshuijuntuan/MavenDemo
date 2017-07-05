@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sdj.spider.dao.BlogReaderMapper" >
+  <resultMap id="BaseResultMap" type="com.sdj.spider.models.BlogReader" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="blogid" property="blogid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="readertime" property="readertime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, blogid, userid, address, readertime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from blogreader
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blogreader
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sdj.spider.models.BlogReader" >
+    insert into blogreader (id, blogid, userid, 
+      address, readertime)
+    values (#{id,jdbcType=INTEGER}, #{blogid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{readertime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sdj.spider.models.BlogReader" >
+    insert into blogreader
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="blogid != null" >
+        blogid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="readertime != null" >
+        readertime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="blogid != null" >
+        #{blogid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="readertime != null" >
+        #{readertime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.BlogReader" >
+    update blogreader
+    <set >
+      <if test="blogid != null" >
+        blogid = #{blogid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="readertime != null" >
+        readertime = #{readertime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.BlogReader" >
+    update blogreader
+    set blogid = #{blogid,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      readertime = #{readertime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

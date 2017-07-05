@@ -1,0 +1,53 @@
+#@layout() 
+#define main()
+<ul class="breadcrumb">
+	<li>当前位置：</li>
+	<li>基础档案</li>
+	<li>基础信息</li>
+	<li>楼盘信息</li>
+</ul>
+<form class="form-inline">
+
+	<div class="form-group">
+		<label for="projectName">项目名称: </label> <input type="text"
+			class="form-control" id="projectName" placeholder="项目名称" />
+	</div>
+	<input type="submit" class="btn btn-default" value="查询"/>
+	<a class="btn btn-default" href="add">添加</a>
+	
+</form>
+<table class="table table-striped">
+		<thead>
+			<tr>
+				<td>楼盘编号</td>
+				<td>楼盘名称</td>
+				<td>负责人</td>
+				<td>联系人</td>
+				<td>联系电话</td>
+				<td>占地面积</td>
+				<td>绿化面积</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+			#for(x : proManagementPage.getList())
+			<tr>
+				<td>#(x.ManageNum)</td>
+				<td>#(x.ManageName)</td>
+				<td>#(x.ResponsiblePer)</td>
+				<td>#(x.ContactPer)</td>
+				<td>#(x.ContactPhone)</td>
+				<td>#(x.BuildingArea)</td>
+				<td>#(x.GreenArea)</td>
+				<td>
+					<div class="btn-group">
+						<a class="btn-link" href="edit/#(x.ManageId)">编辑</a>
+						<a class="btn-link" href="delete/#(x.ManageId)">删除</a>
+					</div>
+				</td>
+			</tr>
+			#end
+		</tbody>
+	</table>
+	 #@paginate(proManagementPage.totalPage,proManagementPage.pageNumber,"/ProManagement/")
+#end
