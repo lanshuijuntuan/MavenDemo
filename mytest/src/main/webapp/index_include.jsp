@@ -15,7 +15,7 @@
 	<%
 		out.println(request.getAttribute("test"));
 	%>
-	
+
 
 	<%@ include file="header.jsp"%>
 
@@ -90,13 +90,12 @@
 	<%
 		}
 	%>
-	
-	
-	
+
+	<jsp:include page="action_test.jsp"></jsp:include>
+
+
 	<%@ include file="footer.jsp"%>
-	<jsp:forward page="home.jsp">
-	<jsp:param value="467" name="errormsg"/>
-	</jsp:forward>
+
 
 </body>
 </html>

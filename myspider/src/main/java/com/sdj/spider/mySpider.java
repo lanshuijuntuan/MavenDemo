@@ -1,22 +1,18 @@
 package com.sdj.spider;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.codehaus.groovy.transform.ThreadInterruptibleASTTransformation;
 
 import com.sdj.spider.models.Blog;
-import com.sdj.spider.models.Catolog;
 import com.sdj.spider.models.User;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.PhantomJSDownloader;
-import us.codecraft.webmagic.downloader.selenium.SeleniumDownloader;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.scheduler.BloomFilterDuplicateRemover;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
@@ -65,7 +61,6 @@ public class mySpider implements PageProcessor {
 
 			Blog blog = new Blog();
 
-			
 			// 链接
 			blog.setBlogurl(selectable.get());
 			// 标题
@@ -80,37 +75,32 @@ public class mySpider implements PageProcessor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 
-			
 			String author = selectable.toString().replace("http://www.cnblogs.com/", "").split("/")[0];
 			if (author == null || author.equals("")) {
 				System.out.println("发现空作者：" + selectable.get());
 				author = "";
 			}
 			user.setName(author);
-			
-			user.setHomepage(String.format("http://www.cnblogs.com/%s/",author));
-		
+
+			user.setHomepage(String.format("http://www.cnblogs.com/%s/", author));
+
 			user.setIntegral(0);
-			
-			
-			
+
 			String authorName = html.xpath("//*[@id=\"profile_block\"]/a[1]/text()").get();
-			//设置昵称
+			// 设置昵称
 			user.setNickname(authorName);
-			
-			
-			String authorRegTime = html.xpath("//*[@id=\"profile_block\"]/a[2]/@title").get().replace("入园时间：", "").trim();
+
+			String authorRegTime = html.xpath("//*[@id=\"profile_block\"]/a[2]/@title").get().replace("入园时间：", "")
+					.trim();
 			try {
-				//设置注册时间
+				// 设置注册时间
 				user.setRegtime(DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 			String xpathFollowers = String.format("//a[@href='http://home.cnblogs.com/u/%s/followers/']/text()",
 					author);
 			int followers = Integer.parseInt(html.xpath(xpathFollowers).get());
@@ -121,7 +111,7 @@ public class mySpider implements PageProcessor {
 		// 符合
 		else {
 			Selectable selectablelinks = html.links();
-			
+
 			page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
 			page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/sitehome/p/[0-9]{1,7}").all());
 
@@ -142,13 +132,14 @@ public class mySpider implements PageProcessor {
 			System.out.println("开始抓取网页");
 			starttime = System.currentTimeMillis();
 
-//			System.setProperty("selenuim_config", "config.ini");
-			String phantomjsCommand=System.getProperty("user.dir")+"\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
+			// System.setProperty("selenuim_config", "config.ini");
+			String phantomjsCommand = System.getProperty("user.dir")
+					+ "\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
 			Spider.create(new mySpider()).addUrl("http://www.cnblogs.com/").addPipeline(new DbPipeline())
 					.setScheduler(new QueueScheduler().setDuplicateRemover(new BloomFilterDuplicateRemover(100000)))
-//					.setDownloader(new SeleniumDownloader("chromedriver/chromedriver.exe"))
-					.setDownloader(new PhantomJSDownloader(phantomjsCommand))
-					.thread(5).run();
+					// .setDownloader(new
+					// SeleniumDownloader("chromedriver/chromedriver.exe"))
+					.setDownloader(new PhantomJSDownloader(phantomjsCommand)).thread(5).run();
 			endtime = System.currentTimeMillis();
 			System.out.println("爬取结束，耗时约" + ((endtime - starttime) / 1000) + "秒，抓取了" + mySpider.count + "条记录");
 		} catch (Exception e) {
