@@ -24,5 +24,10 @@
 			<version>8.1.8.v20121106</version>
 			<classifier>sources</classifier>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>com.springsource.org.apache.commons.io</artifactId>
+			<version>1.4.0</version>
+		</dependency>
 	</dependencies>
 </project>

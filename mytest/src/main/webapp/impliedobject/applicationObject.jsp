@@ -1,3 +1,4 @@
+<!-- 此网页是用来测试JSP的隐含对象application -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.Map"%>
@@ -7,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>JSP-application 对象</title>
 </head>
 <body>
 	<p>
