@@ -9,8 +9,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<jsp:useBean id="student" class="com.sdj.mytest.Student"></jsp:useBean>
 </head>
 <body>
+	<jsp:setProperty property="name" name="student" value="张三" />
+	<jsp:setProperty property="nickName" name="student" value="二狗子" />
+
+	<p>学生的name：${student.name}</p>
+	<p>学生的nickname：${student.nickName }</p>
+	<jsp:text>测试jsp:text</jsp:text>
+	
 	<p>
 		获得的跳转信息errormsg：<span>${param.errormsg},</span><span>${param.test},</span>
 	</p>
