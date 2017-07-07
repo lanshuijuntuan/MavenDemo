@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class User implements Serializable {
-    private Integer id;
+    private String id;
 
-    private String name;
+    private String blogname;
 
     private String nickname;
 
@@ -22,22 +22,24 @@ public class User implements Serializable {
 
     private String password;
 
+    private Integer blogid;
+
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
-    public String getName() {
-        return name;
+    public String getBlogname() {
+        return blogname;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setBlogname(String blogname) {
+        this.blogname = blogname == null ? null : blogname.trim();
     }
 
     public String getNickname() {
@@ -94,5 +96,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public Integer getBlogid() {
+        return blogid;
+    }
+
+    public void setBlogid(Integer blogid) {
+        this.blogid = blogid;
     }
 }

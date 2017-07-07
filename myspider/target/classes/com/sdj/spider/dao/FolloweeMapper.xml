@@ -3,8 +3,8 @@
 <mapper namespace="com.sdj.spider.dao.FolloweeMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.Followee" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
-    <result column="followeeid" property="followeeid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="followeeid" property="followeeid" jdbcType="VARCHAR" />
     <result column="followeetime" property="followeetime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -23,7 +23,7 @@
   <insert id="insert" parameterType="com.sdj.spider.models.Followee" >
     insert into followee (id, userid, followeeid, 
       followeetime)
-    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{followeeid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{followeeid,jdbcType=VARCHAR}, 
       #{followeetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Followee" >
@@ -47,10 +47,10 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
       <if test="followeeid != null" >
-        #{followeeid,jdbcType=INTEGER},
+        #{followeeid,jdbcType=VARCHAR},
       </if>
       <if test="followeetime != null" >
         #{followeetime,jdbcType=TIMESTAMP},
@@ -61,10 +61,10 @@
     update followee
     <set >
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="followeeid != null" >
-        followeeid = #{followeeid,jdbcType=INTEGER},
+        followeeid = #{followeeid,jdbcType=VARCHAR},
       </if>
       <if test="followeetime != null" >
         followeetime = #{followeetime,jdbcType=TIMESTAMP},
@@ -74,8 +74,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Followee" >
     update followee
-    set userid = #{userid,jdbcType=INTEGER},
-      followeeid = #{followeeid,jdbcType=INTEGER},
+    set userid = #{userid,jdbcType=VARCHAR},
+      followeeid = #{followeeid,jdbcType=VARCHAR},
       followeetime = #{followeetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

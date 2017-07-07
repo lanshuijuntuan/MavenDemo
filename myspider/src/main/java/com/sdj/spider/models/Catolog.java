@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Catolog implements Serializable {
     private Integer id;
 
-    private Integer userid;
+    private String userid;
 
     private String name;
 
@@ -19,12 +19,12 @@ public class Catolog implements Serializable {
         this.id = id;
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
     public String getName() {

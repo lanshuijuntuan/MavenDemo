@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sdj.spider.dao.BlogReaderMapper" >
-  <resultMap id="BaseResultMap" type="com.sdj.spider.models.BlogReader" >
+<mapper namespace="com.sdj.spider.dao.PostViewerMapper" >
+  <resultMap id="BaseResultMap" type="com.sdj.spider.models.PostViewer" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="blogid" property="blogid" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="postid" property="postid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="readertime" property="readertime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, blogid, userid, address, readertime
+    id, postid, userid, address, readertime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from blogreader
+    from postviewer
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from blogreader
+    delete from postviewer
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sdj.spider.models.BlogReader" >
-    insert into blogreader (id, blogid, userid, 
+  <insert id="insert" parameterType="com.sdj.spider.models.PostViewer" >
+    insert into postviewer (id, postid, userid, 
       address, readertime)
-    values (#{id,jdbcType=INTEGER}, #{blogid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{readertime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.sdj.spider.models.BlogReader" >
-    insert into blogreader
+  <insert id="insertSelective" parameterType="com.sdj.spider.models.PostViewer" >
+    insert into postviewer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="blogid != null" >
-        blogid,
+      <if test="postid != null" >
+        postid,
       </if>
       <if test="userid != null" >
         userid,
@@ -50,11 +50,11 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="blogid != null" >
-        #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        #{postid,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
       <if test="address != null" >
         #{address,jdbcType=VARCHAR},
@@ -64,14 +64,14 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.BlogReader" >
-    update blogreader
+  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.PostViewer" >
+    update postviewer
     <set >
-      <if test="blogid != null" >
-        blogid = #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        postid = #{postid,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="address != null" >
         address = #{address,jdbcType=VARCHAR},
@@ -82,10 +82,10 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.BlogReader" >
-    update blogreader
-    set blogid = #{blogid,jdbcType=INTEGER},
-      userid = #{userid,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostViewer" >
+    update postviewer
+    set postid = #{postid,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       readertime = #{readertime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

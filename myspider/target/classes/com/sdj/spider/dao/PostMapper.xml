@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sdj.spider.dao.BlogMapper" >
-  <resultMap id="BaseResultMap" type="com.sdj.spider.models.Blog" >
+<mapper namespace="com.sdj.spider.dao.PostMapper" >
+  <resultMap id="BaseResultMap" type="com.sdj.spider.models.Post" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
     <result column="posted" property="posted" jdbcType="TIMESTAMP" />
     <result column="catologid" property="catologid" jdbcType="INTEGER" />
-    <result column="blogurl" property="blogurl" jdbcType="VARCHAR" />
+    <result column="posturl" property="posturl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, content, userid, posted, catologid, blogurl
+    id, title, content, userid, posted, catologid, posturl
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from blog
+    from post
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from blog
+    delete from post
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sdj.spider.models.Blog" >
-    insert into blog (id, title, content, 
+  <insert id="insert" parameterType="com.sdj.spider.models.Post" >
+    insert into post (id, title, content, 
       userid, posted, catologid, 
-      blogurl)
+      posturl)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{userid,jdbcType=INTEGER}, #{posted,jdbcType=TIMESTAMP}, #{catologid,jdbcType=INTEGER}, 
-      #{blogurl,jdbcType=VARCHAR})
+      #{userid,jdbcType=VARCHAR}, #{posted,jdbcType=TIMESTAMP}, #{catologid,jdbcType=INTEGER}, 
+      #{posturl,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sdj.spider.models.Blog" >
-    insert into blog
+  <insert id="insertSelective" parameterType="com.sdj.spider.models.Post" >
+    insert into post
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -52,8 +52,8 @@
       <if test="catologid != null" >
         catologid,
       </if>
-      <if test="blogurl != null" >
-        blogurl,
+      <if test="posturl != null" >
+        posturl,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -67,7 +67,7 @@
         #{content,jdbcType=VARCHAR},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
       <if test="posted != null" >
         #{posted,jdbcType=TIMESTAMP},
@@ -75,13 +75,13 @@
       <if test="catologid != null" >
         #{catologid,jdbcType=INTEGER},
       </if>
-      <if test="blogurl != null" >
-        #{blogurl,jdbcType=VARCHAR},
+      <if test="posturl != null" >
+        #{posturl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Blog" >
-    update blog
+  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Post" >
+    update post
     <set >
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
@@ -90,7 +90,7 @@
         content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="posted != null" >
         posted = #{posted,jdbcType=TIMESTAMP},
@@ -98,20 +98,20 @@
       <if test="catologid != null" >
         catologid = #{catologid,jdbcType=INTEGER},
       </if>
-      <if test="blogurl != null" >
-        blogurl = #{blogurl,jdbcType=VARCHAR},
+      <if test="posturl != null" >
+        posturl = #{posturl,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Blog" >
-    update blog
+  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Post" >
+    update post
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
-      userid = #{userid,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=VARCHAR},
       posted = #{posted,jdbcType=TIMESTAMP},
       catologid = #{catologid,jdbcType=INTEGER},
-      blogurl = #{blogurl,jdbcType=VARCHAR}
+      posturl = #{posturl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

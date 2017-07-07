@@ -6,9 +6,9 @@ import java.util.Date;
 public class Follower implements Serializable {
     private Integer id;
 
-    private Integer userid;
+    private String userid;
 
-    private Integer followedid;
+    private String followedid;
 
     private Date followtime;
 
@@ -22,20 +22,20 @@ public class Follower implements Serializable {
         this.id = id;
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
-    public Integer getFollowedid() {
+    public String getFollowedid() {
         return followedid;
     }
 
-    public void setFollowedid(Integer followedid) {
-        this.followedid = followedid;
+    public void setFollowedid(String followedid) {
+        this.followedid = followedid == null ? null : followedid.trim();
     }
 
     public Date getFollowtime() {

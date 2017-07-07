@@ -2,11 +2,12 @@ package com.sdj.spider;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import com.sdj.spider.models.Blog;
+import com.sdj.spider.models.Post;
 import com.sdj.spider.models.User;
 
 import us.codecraft.webmagic.Page;
@@ -24,7 +25,7 @@ public class mySpider implements PageProcessor {
 	private Site site = Site.me()
 			.setUserAgent(
 					"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36")
-			.setRetryTimes(3).setSleepTime(400);
+			.setRetryTimes(3).setSleepTime(800);
 
 	public static int count = 0;
 
@@ -32,91 +33,111 @@ public class mySpider implements PageProcessor {
 
 	public void process(Page page) {
 		// TODO Auto-generated method stub
+		try {
+			Selectable selectable = page.getUrl();
+			Html html = page.getHtml();
 
-		Selectable selectable = page.getUrl();
-		Html html = page.getHtml();
-		if (map.containsKey(selectable.toString())) {
-			page.setSkip(true);
-			return;
-		} else {
-			String title = html.xpath("/html/head/title").get();
-			map.put(selectable.toString(), title);
-		}
+			if (map.containsKey(selectable.toString())) {
+				page.setSkip(true);
+				return;
+			} else {
+				String title = html.xpath("/html/head/title").get();
+				map.put(selectable.toString(), title);
+			}
 
-		// 符合帖子标准
-		/*
-		 * if (selectable.regex(
-		 * "http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").match()) {
-		 * 
-		 * page.putField("pageurl", selectable.toString()); String
-		 * author=selectable.toString().replace("http://www.cnblogs.com/",
-		 * "").split("/")[0]; if(author==null||author.equals("")) {
-		 * System.out.println("发现空作者："+selectable.get()); author=""; }
-		 * page.putField("author", author); page.putField("title",
-		 * html.xpath("/html/head/title/text()").get()); }
-		 */
-		// 符合帖子标准
-		if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[a-z 0-9 -]+.html").match()) {
-			User user = new User();
+			// 符合帖子标准
+			if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[a-z 0-9 -]+.html").match()) {
+				User user = new User();
 
-			Blog blog = new Blog();
+				Post post = new Post();
 
-			// 链接
-			blog.setBlogurl(selectable.get());
-			// 标题
-			blog.setTitle(html.xpath(String.format("//a[@href='%s']/text()", blog.getBlogurl())).get());
-			// 内容
-			blog.setContent(html.xpath(String.format("//div[@id='%s']", "cnblogs_post_body")).get());
-			// 时间
-			try {
-				blog.setPosted(
+				// 链接
+				post.setPosturl(selectable.get());
+				// 标题
+				post.setTitle(html.xpath(String.format("//a[@href='%s']/text()", post.getPosturl())).get());
+				// 内容
+				/*
+				 * post.setContent(html.xpath(String.format(
+				 * "//div[@id='%s']/text()", "cnblogs_post_body")).get()
+				 * .substring(0, 200));
+				 */
+				post.setContent(html.xpath(String.format("//a[@href='%s']/text()", post.getPosturl())).get());
+				// 时间
+
+				post.setPosted(
 						DateUtils.parseDate(html.xpath("//span[@id='post-date']/text()").get(), "yyyy-MM-dd HH:mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				List<Selectable> nodes = html.css("script:not([src])").nodes();
+				String blogname = "";
+				for (Selectable node : nodes) {
+
+					if (node.get().contains("var currentBlogApp =")) {
+						blogname = node.xpath("script/html()").regex("var currentBlogApp = '.{1,20}',").get()
+								.replace("var currentBlogApp = '", "").replace("',", "");
+						user.setBlogname(blogname);
+					} else if (node.get().contains(",cb_blogId=")) {
+						String cb_blogId = node.xpath("script/html()").regex(",cb_blogId=[0-9]{1,20},").get()
+								.replace(",cb_blogId=", "").replace(",", "");
+						user.setBlogid(Integer.parseInt(cb_blogId));
+						String cb_entryId = node.xpath("script/html()").regex(",cb_entryId=.{1,20},").get()
+								.replace(",cb_entryId=", "").replace(",", "");
+
+						post.setId(Integer.parseInt(cb_entryId));
+						String cb_blogUserGuid = node.xpath("script/html()").regex(",cb_blogUserGuid='.{1,50}',").get()
+								.replace(",cb_blogUserGuid='", "").replace("',", "");
+						user.setId(cb_blogUserGuid);
+						String cb_entryCreatedDate = node.xpath("script/html()").regex(",cb_entryCreatedDate='.{1,20}'")
+								.get().replace(",cb_entryCreatedDate='", "").replace("'", "").trim();
+						post.setPosted(DateUtils.parseDate(cb_entryCreatedDate, "yyyy/MM/dd HH:mm:ss"));
+					}
+
+				}
+
+				post.setUserid(user.getId());
+
+				user.setHomepage(String.format("http://www.cnblogs.com/%s/", blogname));
+
+				page.addTargetRequest(String.format("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=%s", blogname));
+
+				// String nickName =
+				// html.xpath("//*[@id=\"profile_block\"]/a[1]/text()").get();
+				// // 设置昵称
+				// user.setNickname(nickName);
+				//
+				// String authorRegTime =
+				// html.xpath("//*[@id=\"profile_block\"]/a[2]/@title").get().replace("入园时间：",
+				// "")
+				// .trim();
+				//
+				// // 设置注册时间
+				// user.setRegtime(DateUtils.parseDate(authorRegTime,
+				// "yyyy-MM-dd"));
+
+				page.putField("user", user);
+				page.putField("post", post);
+
+			} else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=")) {
+				String blogname = selectable.get().replace("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=", "");
+				String nickname = html.$("#profile_block > a:nth-child(1)").xpath("a/text()").get();
+				String authorRegTime = html.$("#profile_block > a:nth-child(3)").xpath("a/@title").get()
+						.replace("入园时间：", "").trim();
+				System.out.println("nickname:" + nickname + " authorRegTime:" + authorRegTime);
+			}
+			// 符合
+			else {
+				Selectable selectablelinks = html.links();
+
+				page.addTargetRequests(
+						selectablelinks.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
+				page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/sitehome/p/[0-9]{1,7}").all());
+
 			}
 
-			String author = selectable.toString().replace("http://www.cnblogs.com/", "").split("/")[0];
-			if (author == null || author.equals("")) {
-				System.out.println("发现空作者：" + selectable.get());
-				author = "";
-			}
-			user.setName(author);
-
-			user.setHomepage(String.format("http://www.cnblogs.com/%s/", author));
-
-			user.setIntegral(0);
-
-			String authorName = html.xpath("//*[@id=\"profile_block\"]/a[1]/text()").get();
-			// 设置昵称
-			user.setNickname(authorName);
-
-			String authorRegTime = html.xpath("//*[@id=\"profile_block\"]/a[2]/@title").get().replace("入园时间：", "")
-					.trim();
-			try {
-				// 设置注册时间
-				user.setRegtime(DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			String xpathFollowers = String.format("//a[@href='http://home.cnblogs.com/u/%s/followers/']/text()",
-					author);
-			int followers = Integer.parseInt(html.xpath(xpathFollowers).get());
-			String xpathFollewees = String.format("http://home.cnblogs.com/u/%s/followees/", author);
-			int follweees = Integer.parseInt(html.xpath(xpathFollewees).get());
-
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			count++;
 		}
-		// 符合
-		else {
-			Selectable selectablelinks = html.links();
-
-			page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
-			page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/sitehome/p/[0-9]{1,7}").all());
-
-		}
-		count++;
 
 	}
 
@@ -139,7 +160,8 @@ public class mySpider implements PageProcessor {
 					.setScheduler(new QueueScheduler().setDuplicateRemover(new BloomFilterDuplicateRemover(100000)))
 					// .setDownloader(new
 					// SeleniumDownloader("chromedriver/chromedriver.exe"))
-					.setDownloader(new PhantomJSDownloader(phantomjsCommand)).thread(5).run();
+					// .setDownloader(new PhantomJSDownloader(phantomjsCommand))
+					.thread(5).run();
 			endtime = System.currentTimeMillis();
 			System.out.println("爬取结束，耗时约" + ((endtime - starttime) / 1000) + "秒，抓取了" + mySpider.count + "条记录");
 		} catch (Exception e) {

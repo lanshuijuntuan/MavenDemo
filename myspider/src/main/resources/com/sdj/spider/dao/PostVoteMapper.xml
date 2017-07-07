@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sdj.spider.dao.BlogVoteMapper" >
-  <resultMap id="BaseResultMap" type="com.sdj.spider.models.BlogVote" >
+<mapper namespace="com.sdj.spider.dao.PostVoteMapper" >
+  <resultMap id="BaseResultMap" type="com.sdj.spider.models.PostVote" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="blogid" property="blogid" jdbcType="INTEGER" />
+    <result column="postid" property="postid" jdbcType="INTEGER" />
     <result column="issupport" property="issupport" jdbcType="BIT" />
     <result column="votetime" property="votetime" jdbcType="TIMESTAMP" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, blogid, issupport, votetime, userid
+    id, postid, issupport, votetime, userid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from blogvote
+    from postvote
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from blogvote
+    delete from postvote
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sdj.spider.models.BlogVote" >
-    insert into blogvote (id, blogid, issupport, 
+  <insert id="insert" parameterType="com.sdj.spider.models.PostVote" >
+    insert into postvote (id, postid, issupport, 
       votetime, userid)
-    values (#{id,jdbcType=INTEGER}, #{blogid,jdbcType=INTEGER}, #{issupport,jdbcType=BIT}, 
-      #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=INTEGER})
+    values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{issupport,jdbcType=BIT}, 
+      #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sdj.spider.models.BlogVote" >
-    insert into blogvote
+  <insert id="insertSelective" parameterType="com.sdj.spider.models.PostVote" >
+    insert into postvote
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="blogid != null" >
-        blogid,
+      <if test="postid != null" >
+        postid,
       </if>
       <if test="issupport != null" >
         issupport,
@@ -50,8 +50,8 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="blogid != null" >
-        #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        #{postid,jdbcType=INTEGER},
       </if>
       <if test="issupport != null" >
         #{issupport,jdbcType=BIT},
@@ -60,15 +60,15 @@
         #{votetime,jdbcType=TIMESTAMP},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.BlogVote" >
-    update blogvote
+  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.PostVote" >
+    update postvote
     <set >
-      <if test="blogid != null" >
-        blogid = #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        postid = #{postid,jdbcType=INTEGER},
       </if>
       <if test="issupport != null" >
         issupport = #{issupport,jdbcType=BIT},
@@ -77,17 +77,17 @@
         votetime = #{votetime,jdbcType=TIMESTAMP},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.BlogVote" >
-    update blogvote
-    set blogid = #{blogid,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostVote" >
+    update postvote
+    set postid = #{postid,jdbcType=INTEGER},
       issupport = #{issupport,jdbcType=BIT},
       votetime = #{votetime,jdbcType=TIMESTAMP},
-      userid = #{userid,jdbcType=INTEGER}
+      userid = #{userid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

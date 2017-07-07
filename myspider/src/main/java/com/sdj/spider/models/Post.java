@@ -3,20 +3,20 @@ package com.sdj.spider.models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Blog implements Serializable {
+public class Post implements Serializable {
     private Integer id;
 
     private String title;
 
     private String content;
 
-    private Integer userid;
+    private String userid;
 
     private Date posted;
 
     private Integer catologid;
 
-    private String blogurl;
+    private String posturl;
 
     private static final long serialVersionUID = 1L;
 
@@ -44,12 +44,12 @@ public class Blog implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
     public Date getPosted() {
@@ -68,11 +68,11 @@ public class Blog implements Serializable {
         this.catologid = catologid;
     }
 
-    public String getBlogurl() {
-        return blogurl;
+    public String getPosturl() {
+        return posturl;
     }
 
-    public void setBlogurl(String blogurl) {
-        this.blogurl = blogurl == null ? null : blogurl.trim();
+    public void setPosturl(String posturl) {
+        this.posturl = posturl == null ? null : posturl.trim();
     }
 }

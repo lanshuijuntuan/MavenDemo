@@ -6,7 +6,7 @@
     <result column="commentid" property="commentid" jdbcType="INTEGER" />
     <result column="issupport" property="issupport" jdbcType="BIT" />
     <result column="votetime" property="votetime" jdbcType="TIMESTAMP" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, commentid, issupport, votetime, userid
@@ -25,7 +25,7 @@
     insert into commentvote (id, commentid, issupport, 
       votetime, userid)
     values (#{id,jdbcType=INTEGER}, #{commentid,jdbcType=INTEGER}, #{issupport,jdbcType=BIT}, 
-      #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=INTEGER})
+      #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.CommentVote" >
     insert into commentvote
@@ -60,7 +60,7 @@
         #{votetime,jdbcType=TIMESTAMP},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -77,7 +77,7 @@
         votetime = #{votetime,jdbcType=TIMESTAMP},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -87,7 +87,7 @@
     set commentid = #{commentid,jdbcType=INTEGER},
       issupport = #{issupport,jdbcType=BIT},
       votetime = #{votetime,jdbcType=TIMESTAMP},
-      userid = #{userid,jdbcType=INTEGER}
+      userid = #{userid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

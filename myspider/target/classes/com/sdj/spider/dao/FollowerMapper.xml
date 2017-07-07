@@ -3,8 +3,8 @@
 <mapper namespace="com.sdj.spider.dao.FollowerMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.Follower" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
-    <result column="followedid" property="followedid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="followedid" property="followedid" jdbcType="VARCHAR" />
     <result column="followtime" property="followtime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -23,7 +23,7 @@
   <insert id="insert" parameterType="com.sdj.spider.models.Follower" >
     insert into follower (id, userid, followedid, 
       followtime)
-    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{followedid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{followedid,jdbcType=VARCHAR}, 
       #{followtime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Follower" >
@@ -47,10 +47,10 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
       <if test="followedid != null" >
-        #{followedid,jdbcType=INTEGER},
+        #{followedid,jdbcType=VARCHAR},
       </if>
       <if test="followtime != null" >
         #{followtime,jdbcType=TIMESTAMP},
@@ -61,10 +61,10 @@
     update follower
     <set >
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="followedid != null" >
-        followedid = #{followedid,jdbcType=INTEGER},
+        followedid = #{followedid,jdbcType=VARCHAR},
       </if>
       <if test="followtime != null" >
         followtime = #{followtime,jdbcType=TIMESTAMP},
@@ -74,8 +74,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Follower" >
     update follower
-    set userid = #{userid,jdbcType=INTEGER},
-      followedid = #{followedid,jdbcType=INTEGER},
+    set userid = #{userid,jdbcType=VARCHAR},
+      followedid = #{followedid,jdbcType=VARCHAR},
       followtime = #{followtime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

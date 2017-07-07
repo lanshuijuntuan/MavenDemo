@@ -12,7 +12,7 @@ public class CommentVote implements Serializable {
 
     private Date votetime;
 
-    private Integer userid;
+    private String userid;
 
     private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,11 @@ public class CommentVote implements Serializable {
         this.votetime = votetime;
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 }

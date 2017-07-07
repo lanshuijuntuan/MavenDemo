@@ -6,9 +6,9 @@ import java.util.Date;
 public class Comment implements Serializable {
     private Integer id;
 
-    private Integer blogid;
+    private Integer postid;
 
-    private Integer userid;
+    private String userid;
 
     private String content;
 
@@ -26,20 +26,20 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Integer getBlogid() {
-        return blogid;
+    public Integer getPostid() {
+        return postid;
     }
 
-    public void setBlogid(Integer blogid) {
-        this.blogid = blogid;
+    public void setPostid(Integer postid) {
+        this.postid = postid;
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
     public String getContent() {

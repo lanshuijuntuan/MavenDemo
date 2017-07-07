@@ -3,14 +3,14 @@
 <mapper namespace="com.sdj.spider.dao.CommentMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.Comment" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="blogid" property="blogid" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="postid" property="postid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="posted" property="posted" jdbcType="TIMESTAMP" />
     <result column="commentid" property="commentid" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, blogid, userid, content, posted, commentid
+    id, postid, userid, content, posted, commentid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,10 +23,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Comment" >
-    insert into comment (id, blogid, userid, 
+    insert into comment (id, postid, userid, 
       content, posted, commentid
       )
-    values (#{id,jdbcType=INTEGER}, #{blogid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{posted,jdbcType=TIMESTAMP}, #{commentid,jdbcType=INTEGER}
       )
   </insert>
@@ -36,8 +36,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="blogid != null" >
-        blogid,
+      <if test="postid != null" >
+        postid,
       </if>
       <if test="userid != null" >
         userid,
@@ -56,11 +56,11 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="blogid != null" >
-        #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        #{postid,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
@@ -76,11 +76,11 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Comment" >
     update comment
     <set >
-      <if test="blogid != null" >
-        blogid = #{blogid,jdbcType=INTEGER},
+      <if test="postid != null" >
+        postid = #{postid,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=INTEGER},
+        userid = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
@@ -96,8 +96,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Comment" >
     update comment
-    set blogid = #{blogid,jdbcType=INTEGER},
-      userid = #{userid,jdbcType=INTEGER},
+    set postid = #{postid,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       posted = #{posted,jdbcType=TIMESTAMP},
       commentid = #{commentid,jdbcType=INTEGER}

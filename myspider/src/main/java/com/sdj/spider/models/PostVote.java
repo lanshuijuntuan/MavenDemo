@@ -3,16 +3,16 @@ package com.sdj.spider.models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class BlogVote implements Serializable {
+public class PostVote implements Serializable {
     private Integer id;
 
-    private Integer blogid;
+    private Integer postid;
 
     private Boolean issupport;
 
     private Date votetime;
 
-    private Integer userid;
+    private String userid;
 
     private static final long serialVersionUID = 1L;
 
@@ -24,12 +24,12 @@ public class BlogVote implements Serializable {
         this.id = id;
     }
 
-    public Integer getBlogid() {
-        return blogid;
+    public Integer getPostid() {
+        return postid;
     }
 
-    public void setBlogid(Integer blogid) {
-        this.blogid = blogid;
+    public void setPostid(Integer postid) {
+        this.postid = postid;
     }
 
     public Boolean getIssupport() {
@@ -48,11 +48,11 @@ public class BlogVote implements Serializable {
         this.votetime = votetime;
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 }
