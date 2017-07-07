@@ -23,6 +23,12 @@
     from user
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="selectByBlogName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where blogname = #{blogname,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user
     where id = #{id,jdbcType=VARCHAR}

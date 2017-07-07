@@ -64,8 +64,8 @@ public class mySpider implements PageProcessor {
 				post.setContent(html.xpath(String.format("//a[@href='%s']/text()", post.getPosturl())).get());
 				// 时间
 
-				post.setPosted(
-						DateUtils.parseDate(html.xpath("//span[@id='post-date']/text()").get(), "yyyy-MM-dd HH:mm"));
+			/*	post.setPosted(
+						DateUtils.parseDate(html.xpath("//span[@id='post-date']/text()").get(), "yyyy-MM-dd HH:mm"));*/
 				List<Selectable> nodes = html.css("script:not([src])").nodes();
 				String blogname = "";
 				for (Selectable node : nodes) {
@@ -120,6 +120,12 @@ public class mySpider implements PageProcessor {
 				String nickname = html.$("#profile_block > a:nth-child(1)").xpath("a/text()").get();
 				String authorRegTime = html.$("#profile_block > a:nth-child(3)").xpath("a/@title").get()
 						.replace("入园时间：", "").trim();
+				User user=new User();
+				user.setId("-1");
+				user.setNickname(nickname);
+				user.setBlogname(blogname);
+				user.setRegtime(DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
+				page.putField("user", user);
 				System.out.println("nickname:" + nickname + " authorRegTime:" + authorRegTime);
 			}
 			// 符合

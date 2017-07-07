@@ -34,33 +34,44 @@ public class DbPipeline implements Pipeline {
 	public void process(ResultItems resultItems, Task task) {
 		// TODO Auto-generated method stub
 		SqlSession sqlSession = sqlSessionFactory.openSession();
-		
+
 		try {
-			
+
 			if (resultItems.get("user") == null) {
 				return;
 			}
-			User user=resultItems.get("user");
-			if(resultItems.get("post")==null)
-			{
-				return;
+			User user = resultItems.get("user");
+			
+			if (StringUtils.isNotBlank(user.getId()) && user.getId() != null) {
+				UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+				if (user.getId().equals("-1")) {
+					User tmpUser = userMapper.selectByBlogName(user.getBlogname());
+					if (tmpUser == null) {
+						return;
+					}
+					tmpUser.setNickname(user.getNickname());
+					tmpUser.setRegtime(user.getRegtime());
+					userMapper.updateByPrimaryKey(tmpUser);
+				} else {
+					User tmpUser = userMapper.selectByPrimaryKey(user.getId());
+					if (tmpUser == null) {
+						userMapper.insert(user);
+					}
+				}
+
 			}
-			Post post=resultItems.get("post");
-			if(StringUtils.isNotBlank(user.getId())&&user.getId()!=null)
-			{
-				UserMapper userMapper=sqlSession.getMapper(UserMapper.class);
-				userMapper.insert(user);
-				
-			}
-			if(post.getId()>0)
-			{
-				PostMapper postMapper=sqlSession.getMapper(PostMapper.class);
-				postMapper.insert(post);
+			if (resultItems.get("post") != null) {
+				Post post = resultItems.get("post");
+				if (post.getId() > 0) {
+					PostMapper postMapper = sqlSession.getMapper(PostMapper.class);
+					Post tmpPost = postMapper.selectByPrimaryKey(post.getId());
+					if (tmpPost == null) {
+						postMapper.insert(post);
+					}
+				}
 			}
 			sqlSession.commit();
-			
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
