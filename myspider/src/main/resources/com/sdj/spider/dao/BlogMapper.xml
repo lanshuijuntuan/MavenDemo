@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sdj.spider.dao.BlogMapper" >
+  <resultMap id="BaseResultMap" type="com.sdj.spider.models.Blog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="blogname" property="blogname" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="homepage" property="homepage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, blogname, sign, userid, homepage
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from blog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sdj.spider.models.Blog" >
+    insert into blog (id, blogname, sign, 
+      userid, homepage)
+    values (#{id,jdbcType=INTEGER}, #{blogname,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=VARCHAR}, #{homepage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sdj.spider.models.Blog" >
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="blogname != null" >
+        blogname,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="homepage != null" >
+        homepage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="blogname != null" >
+        #{blogname,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="homepage != null" >
+        #{homepage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Blog" >
+    update blog
+    <set >
+      <if test="blogname != null" >
+        blogname = #{blogname,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="homepage != null" >
+        homepage = #{homepage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Blog" >
+    update blog
+    set blogname = #{blogname,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=VARCHAR},
+      homepage = #{homepage,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

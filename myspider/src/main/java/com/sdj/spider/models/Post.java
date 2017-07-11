@@ -10,11 +10,11 @@ public class Post implements Serializable {
 
     private String content;
 
-    private String userid;
+    private Integer blogid;
 
     private Date posted;
 
-    private Integer catologid;
+    private String catolog;
 
     private String posturl;
 
@@ -44,12 +44,12 @@ public class Post implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
-    public String getUserid() {
-        return userid;
+    public Integer getBlogid() {
+        return blogid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid == null ? null : userid.trim();
+    public void setBlogid(Integer blogid) {
+        this.blogid = blogid;
     }
 
     public Date getPosted() {
@@ -60,12 +60,12 @@ public class Post implements Serializable {
         this.posted = posted;
     }
 
-    public Integer getCatologid() {
-        return catologid;
+    public String getCatolog() {
+        return catolog;
     }
 
-    public void setCatologid(Integer catologid) {
-        this.catologid = catologid;
+    public void setCatolog(String catolog) {
+        this.catolog = catolog == null ? null : catolog.trim();
     }
 
     public String getPosturl() {

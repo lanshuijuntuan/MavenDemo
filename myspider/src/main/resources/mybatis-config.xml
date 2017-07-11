@@ -16,7 +16,8 @@
 	</environments>
 	<mappers>
 		<mapper resource="com/sdj/spider/dao/PostMapper.xml" />
-		<mapper resource="com/sdj/spider/dao/UserMapper.xml" />
+		<mapper resource="com/sdj/spider/dao/BlogUserMapper.xml" />
+		<mapper resource="com/sdj/spider/dao/BlogMapper.xml" />
 		<mapper resource="com/sdj/spider/dao/PostViewerMapper.xml" />
 		<mapper resource="com/sdj/spider/dao/PostVoteMapper.xml" />
 		<mapper resource="com/sdj/spider/dao/CommentMapper.xml" />
