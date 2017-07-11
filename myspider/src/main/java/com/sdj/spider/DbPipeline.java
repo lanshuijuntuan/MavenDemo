@@ -103,83 +103,77 @@ public class DbPipeline implements Pipeline {
 				if (blogUser != null) {
 					blogUser.setNickname(nickname);
 					blogUser.setRegtime(regtime);
+					blogUserMapper.updateByPrimaryKey(blogUser);
 				}
 				sqlSession.commit();
 				break;
 			}
 			case PageType.Detail_TagAndCategory: {
-				String blogname=data.getString("blog_name");
-				int blogid=data.getInteger("blog_id");
-				int postid=data.getInteger("post_id");
-				BlogMapper blogMapper=sqlSession.getMapper(BlogMapper.class);
-				PostMapper postMapper=sqlSession.getMapper(PostMapper.class);
-				TagMapper tagMapper=sqlSession.getMapper(TagMapper.class);
-				PostTagMapper postTagMapper=sqlSession.getMapper(PostTagMapper.class);
-				CatologMapper catologMapper=sqlSession.getMapper(CatologMapper.class);
-				Blog blog=blogMapper.selectByPrimaryKey(blogid);
-				Post post=postMapper.selectByPrimaryKey(postid);
-				if(blog==null||post==null)
-				{
+				String blogname = data.getString("blog_name");
+				int blogid = data.getInteger("blog_id");
+				int postid = data.getInteger("post_id");
+				BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
+				PostMapper postMapper = sqlSession.getMapper(PostMapper.class);
+				TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+				PostTagMapper postTagMapper = sqlSession.getMapper(PostTagMapper.class);
+				CatologMapper catologMapper = sqlSession.getMapper(CatologMapper.class);
+				Blog blog = blogMapper.selectByPrimaryKey(blogid);
+				Post post = postMapper.selectByPrimaryKey(postid);
+				if (blog == null || post == null) {
 					return;
 				}
-				JSONArray tagArray=(JSONArray)data.get("post_tags");
-				JSONArray categoryArray=(JSONArray)data.get("post_categories");
-				for(int i=0;i<tagArray.size();i++)
-				{
-					String tagName=tagArray.getString(i).trim();
-					Tag tag=tagMapper.selectByNameAndBlogId(tagName, blogid);
-					if(tag==null)
-					{
-						tag=new Tag();
-						tag.setName(tagName);
-						tag.setBlogid(blogid);
-						String tagid=UUID.randomUUID().toString();
-						tag.setId(UUID.randomUUID().toString());
-						tagMapper.insert(tag);
-						
-						PostTag postTag=new PostTag();
-						postTag.setPostid(postid);
-						postTag.setTagid(tagid);
-						postTagMapper.insert(postTag);
-						
-					}
-					else
-					{
-						PostTag postTag=postTagMapper.selectByTagIdAndPostId(tag.getId(), postid);
-						if(postTag==null)
-						{
-							postTag=new PostTag();
+				JSONArray tagArray = (JSONArray) data.get("post_tags");
+				JSONArray categoryArray = (JSONArray) data.get("post_categories");
+				if (tagArray != null && tagArray.size() > 0) {
+					for (int i = 0; i < tagArray.size(); i++) {
+						String tagName = tagArray.getString(i).trim();
+						Tag tag = tagMapper.selectByNameAndBlogId(tagName, blogid);
+						if (tag == null) {
+							tag = new Tag();
+							tag.setName(tagName);
+							tag.setBlogid(blogid);
+							String tagid = UUID.randomUUID().toString();
+							tag.setId(UUID.randomUUID().toString());
+							tagMapper.insert(tag);
+
+							PostTag postTag = new PostTag();
 							postTag.setPostid(postid);
-							postTag.setTagid(tag.getId());
+							postTag.setTagid(tagid);
 							postTagMapper.insert(postTag);
-							
+
+						} else {
+							PostTag postTag = postTagMapper.selectByTagIdAndPostId(tag.getId(), postid);
+							if (postTag == null) {
+								postTag = new PostTag();
+								postTag.setPostid(postid);
+								postTag.setTagid(tag.getId());
+								postTagMapper.insert(postTag);
+
+							}
 						}
 					}
 				}
-				
-				for(int i=0;i<categoryArray.size();i++)
-				{
-					String categoryname=categoryArray.getString(i);
-					Catolog catolog=catologMapper.selectByNameAndBlogId(categoryname, blogid);
-					if(catolog==null)
-					{
-						catolog=new Catolog();
-						catolog.setName(categoryname);
-						catolog.setBlogid(blogid);
-						String catologid=UUID.randomUUID().toString();
-						catolog.setId(catologid);
-						catologMapper.insert(catolog);
-						post.setCatolog(catologid);
-						postMapper.updateByPrimaryKey(post);
+				if (categoryArray != null && categoryArray.size() > 0) {
+					for (int i = 0; i < categoryArray.size(); i++) {
+						String categoryname = categoryArray.getString(i);
+						Catolog catolog = catologMapper.selectByNameAndBlogId(categoryname, blogid);
+						if (catolog == null) {
+							catolog = new Catolog();
+							catolog.setName(categoryname);
+							catolog.setBlogid(blogid);
+							String catologid = UUID.randomUUID().toString();
+							catolog.setId(catologid);
+							catologMapper.insert(catolog);
+							post.setCatolog(catologid);
+							postMapper.updateByPrimaryKey(post);
+						} else {
+							post.setCatolog(catolog.getId());
+							postMapper.updateByPrimaryKey(post);
+						}
+
 					}
-					else
-					{
-						post.setCatolog(catolog.getId());
-						postMapper.updateByPrimaryKey(post);
-					}
-					
 				}
-				
+
 				sqlSession.commit();
 				break;
 			}

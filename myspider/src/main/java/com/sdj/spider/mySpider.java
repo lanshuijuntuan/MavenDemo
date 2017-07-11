@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,6 +48,7 @@ public class mySpider implements PageProcessor {
 			}
 
 			// 符合帖子标准
+			// 获取帖子信息
 			if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[a-z 0-9 -]+.html").match()) {
 				page.putField("pagetype", PageType.Detail);
 				JSONObject jsonObject = new JSONObject();
@@ -91,7 +93,7 @@ public class mySpider implements PageProcessor {
 						cb_entryCreatedDate = node.xpath("script/html()").regex(",cb_entryCreatedDate='.{1,20}'").get()
 								.replace(",cb_entryCreatedDate='", "").replace("'", "").trim();
 
-						jsonObject.put("post_posted",DateUtils.parseDate(cb_entryCreatedDate, "yyyy/MM/dd HH:mm:ss"));
+						jsonObject.put("post_posted", DateUtils.parseDate(cb_entryCreatedDate, "yyyy/MM/dd HH:mm:ss"));
 					}
 				}
 
@@ -99,11 +101,35 @@ public class mySpider implements PageProcessor {
 				page.addTargetRequest(String.format(
 						"http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=%s&blogId=%s&postId=%s&_=%s",
 						blogname, cb_blogId, cb_entryId, String.valueOf(System.currentTimeMillis())));
+				page.addTargetRequest(String.format("http://www.cnblogs.com/%s/mvc/blog/sidecolumn.aspx?blogApp=%s",
+						blogname, blogname));
+				// http://www.cnblogs.com/post/prevnext?postId=5765624&blogId=84872&dateCreated=2016%2F8%2F12+16%3A53%3A00
+				page.addTargetRequest(
+						String.format("http://www.cnblogs.com/post/prevnext?postId=%s&blogId=%s&dateCreated=%s",
+								cb_entryId, cb_blogId, cb_entryCreatedDate));
 
 				page.putField("data", jsonObject);
 
 			}
+			// http://www.cnblogs.com/post/prevnext?postId=5765624&blogId=84872&dateCreated=2016%2F8%2F12+16%3A53%3A00
+			// 获取上下文
+			else if (selectable.get().contains("http://www.cnblogs.com/post/prevnext?")) {
+				page.addTargetRequests(html.links().regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
+			}
+			// http://www.cnblogs.com/softidea/mvc/blog/sidecolumn.aspx?blogApp=softidea
+			// 获取侧边栏
+			else if (selectable.get().contains("/mvc/blog/sidecolumn.aspx?blogApp=")
+					&& selectable.get().contains("http://www.cnblogs.com/")) {
+				String blogname = selectable.get().split("=")[1].replace("blogApp=", "");
+
+				page.addTargetRequests(html.links()
+						.regex(String.format("http://www.cnblogs.com/%s/tag/[a-z 0-9 -]+/", blogname)).all());
+			} else if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/tag/[a-z 0-9 -]+/").match()) {
+				page.addTargetRequests(
+						html.links().regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
+			}
 			// http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=%s
+			// 获取通知信息
 			else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=")) {
 				page.putField("pagetype", PageType.Detail_New);
 				JSONObject jsonObject = new JSONObject();
@@ -113,11 +139,12 @@ public class mySpider implements PageProcessor {
 						.replace("入园时间：", "").trim();
 				jsonObject.put("blog_name", blogname);
 				jsonObject.put("bloguser_nickname", nickname);
-				jsonObject.put("bloguser_regtime",DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
+				jsonObject.put("bloguser_regtime", DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
 				page.putField("data", jsonObject);
 
 			}
 			// http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=%s&blogId=%s&postId=%s&_=%s
+			// 获取分类信息
 			else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?")) {
 				page.putField("pagetype", PageType.Detail_TagAndCategory);
 				JSONObject jsonObject = new JSONObject();
@@ -138,29 +165,40 @@ public class mySpider implements PageProcessor {
 						jsonObject.put("post_id", postIdPara);
 					}
 				}
+
 				String tags = pagejson.jsonPath("Tags").get();
+
+				if (tags.contains("标签:")) {
+					// 标签
+					JSONArray tagjsonArray = new JSONArray();
+					String[] tagArray = tags.replace("标签:", "").trim().split(",");
+					for (String tag : tagArray) {
+						Document doc = Jsoup.parse(tag);
+						String tagstr = doc.text().trim();
+						if (StringUtils.isEmpty(tagstr) || tagstr == null) {
+							continue;
+						}
+						tagjsonArray.add(tagstr);
+					}
+					jsonObject.put("post_tags", tagjsonArray);
+				}
+
 				String categories = pagejson.jsonPath("Categories").get();
-				String[] tagArray = tags.replace("标签: ", "").split(",");
-				String[] categoryArray = categories.replace("分类: ", "").split(",");
-				JSONArray tagjsonArray = new JSONArray();
-				// 标签
-				for (String tag : tagArray) {
-					Document doc = Jsoup.parse(tag);
-					doc.text();
-					tagjsonArray.add(doc.text());
 
+				if (categories.contains("分类: ")) {
+					String[] categoryArray = categories.replace("分类:", "").trim().split(",");
+					// 分类
+					JSONArray categoryjsonArray = new JSONArray();
+					for (String category : categoryArray) {
+						Document doc = Jsoup.parse(category);
+						String categorystr = doc.text().trim();
+						if (StringUtils.isEmpty(categorystr) || categorystr == null) {
+							continue;
+						}
+						categoryjsonArray.add(categorystr);
+					}
+					jsonObject.put("post_categories", categoryjsonArray);
 				}
-				jsonObject.put("post_tags", tagjsonArray);
-
-				JSONArray categoryjsonArray = new JSONArray();
-
-				// 分类
-				for (String category : categoryArray) {
-					Document doc = Jsoup.parse(category);
-					doc.text();
-					categoryjsonArray.add(doc.text());
-				}
-				jsonObject.put("post_categories", categoryjsonArray);
 				page.putField("data", jsonObject);
 			}
 			// 符合
@@ -193,8 +231,10 @@ public class mySpider implements PageProcessor {
 			starttime = System.currentTimeMillis();
 
 			// System.setProperty("selenuim_config", "config.ini");
-			/*String phantomjsCommand = System.getProperty("user.dir")
-					+ "\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";*/
+			/*
+			 * String phantomjsCommand = System.getProperty("user.dir") +
+			 * "\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
+			 */
 			Spider.create(new mySpider()).addUrl("http://www.cnblogs.com/").addPipeline(new DbPipeline())
 					.setScheduler(new QueueScheduler().setDuplicateRemover(new BloomFilterDuplicateRemover(100000)))
 					// .setDownloader(new
