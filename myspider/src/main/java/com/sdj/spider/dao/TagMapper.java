@@ -10,6 +10,8 @@ public interface TagMapper {
     int insertSelective(Tag record);
 
     Tag selectByPrimaryKey(String id);
+    
+    Tag selectByNameAndBlogId(String name,int blogid);
 
     int updateByPrimaryKeySelective(Tag record);
 

@@ -2,27 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sdj.spider.dao.CatologMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.Catolog" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="blogid" property="blogid" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userid, name
+    id, blogid, name
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from catolog
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByNameAndBlogId" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from catolog
+    where name = #{0} and blogid=#{1}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from catolog
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Catolog" >
-    insert into catolog (id, userid, name
+    insert into catolog (id, blogid, name
       )
-    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+    values (#{id,jdbcType=VARCHAR}, #{blogid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Catolog" >
@@ -31,8 +37,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="userid != null" >
-        userid,
+      <if test="blogid != null" >
+        blogid,
       </if>
       <if test="name != null" >
         name,
@@ -40,10 +46,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
-      <if test="userid != null" >
-        #{userid,jdbcType=VARCHAR},
+      <if test="blogid != null" >
+        #{blogid,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
@@ -53,19 +59,19 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Catolog" >
     update catolog
     <set >
-      <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+      <if test="blogid != null" >
+        blogid = #{blogid,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Catolog" >
     update catolog
-    set userid = #{userid,jdbcType=VARCHAR},
+    set blogid = #{blogid,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

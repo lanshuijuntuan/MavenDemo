@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Tag implements Serializable {
     private String id;
 
-    private String userid;
+    private Integer blogid;
 
-    private String tagname;
+    private String name;
 
     private static final long serialVersionUID = 1L;
 
@@ -19,19 +19,19 @@ public class Tag implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getUserid() {
-        return userid;
+    public Integer getBlogid() {
+        return blogid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid == null ? null : userid.trim();
+    public void setBlogid(Integer blogid) {
+        this.blogid = blogid;
     }
 
-    public String getTagname() {
-        return tagname;
+    public String getName() {
+        return name;
     }
 
-    public void setTagname(String tagname) {
-        this.tagname = tagname == null ? null : tagname.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 }

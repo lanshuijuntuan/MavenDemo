@@ -10,6 +10,8 @@ public interface PostTagMapper {
     int insertSelective(PostTag record);
 
     PostTag selectByPrimaryKey(Integer id);
+    
+    PostTag selectByTagIdAndPostId(String tagid,int postid);
 
     int updateByPrimaryKeySelective(PostTag record);
 

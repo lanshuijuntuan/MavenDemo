@@ -5,13 +5,13 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="blogid" property="blogid" jdbcType="INTEGER" />
     <result column="posted" property="posted" jdbcType="TIMESTAMP" />
-    <result column="catologid" property="catologid" jdbcType="INTEGER" />
+    <result column="catolog" property="catolog" jdbcType="VARCHAR" />
     <result column="posturl" property="posturl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, content, userid, posted, catologid, posturl
+    id, title, content, blogid, posted, catolog, posturl
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -25,10 +25,10 @@
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Post" >
     insert into post (id, title, content, 
-      userid, posted, catologid, 
+      blogid, posted, catolog, 
       posturl)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{userid,jdbcType=VARCHAR}, #{posted,jdbcType=TIMESTAMP}, #{catologid,jdbcType=INTEGER}, 
+      #{blogid,jdbcType=INTEGER}, #{posted,jdbcType=TIMESTAMP}, #{catolog,jdbcType=VARCHAR}, 
       #{posturl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Post" >
@@ -43,14 +43,14 @@
       <if test="content != null" >
         content,
       </if>
-      <if test="userid != null" >
-        userid,
+      <if test="blogid != null" >
+        blogid,
       </if>
       <if test="posted != null" >
         posted,
       </if>
-      <if test="catologid != null" >
-        catologid,
+      <if test="catolog != null" >
+        catolog,
       </if>
       <if test="posturl != null" >
         posturl,
@@ -66,14 +66,14 @@
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="userid != null" >
-        #{userid,jdbcType=VARCHAR},
+      <if test="blogid != null" >
+        #{blogid,jdbcType=INTEGER},
       </if>
       <if test="posted != null" >
         #{posted,jdbcType=TIMESTAMP},
       </if>
-      <if test="catologid != null" >
-        #{catologid,jdbcType=INTEGER},
+      <if test="catolog != null" >
+        #{catolog,jdbcType=VARCHAR},
       </if>
       <if test="posturl != null" >
         #{posturl,jdbcType=VARCHAR},
@@ -89,14 +89,14 @@
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+      <if test="blogid != null" >
+        blogid = #{blogid,jdbcType=INTEGER},
       </if>
       <if test="posted != null" >
         posted = #{posted,jdbcType=TIMESTAMP},
       </if>
-      <if test="catologid != null" >
-        catologid = #{catologid,jdbcType=INTEGER},
+      <if test="catolog != null" >
+        catolog = #{catolog,jdbcType=VARCHAR},
       </if>
       <if test="posturl != null" >
         posturl = #{posturl,jdbcType=VARCHAR},
@@ -108,9 +108,9 @@
     update post
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
-      userid = #{userid,jdbcType=VARCHAR},
+      blogid = #{blogid,jdbcType=INTEGER},
       posted = #{posted,jdbcType=TIMESTAMP},
-      catologid = #{catologid,jdbcType=INTEGER},
+      catolog = #{catolog,jdbcType=VARCHAR},
       posturl = #{posturl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

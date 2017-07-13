@@ -1,23 +1,24 @@
 package com.sdj.spider;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-import com.sdj.spider.models.Post;
-import com.sdj.spider.models.User;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.downloader.PhantomJSDownloader;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.scheduler.BloomFilterDuplicateRemover;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 import us.codecraft.webmagic.selector.Html;
+import us.codecraft.webmagic.selector.Json;
 import us.codecraft.webmagic.selector.Selectable;
 
 public class mySpider implements PageProcessor {
@@ -36,6 +37,7 @@ public class mySpider implements PageProcessor {
 		try {
 			Selectable selectable = page.getUrl();
 			Html html = page.getHtml();
+			Json pagejson = page.getJson();
 
 			if (map.containsKey(selectable.toString())) {
 				page.setSkip(true);
@@ -46,99 +48,168 @@ public class mySpider implements PageProcessor {
 			}
 
 			// 符合帖子标准
+			// 获取帖子信息
 			if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[a-z 0-9 -]+.html").match()) {
-				User user = new User();
+				page.putField("pagetype", PageType.Detail);
+				JSONObject jsonObject = new JSONObject();
+				// post_url
+				jsonObject.put("post_url", selectable.get());
+				// post_title
+				jsonObject.put("post_title",
+						html.xpath(String.format("//a[@href='%s']/text()", selectable.get())).get());
 
-				Post post = new Post();
+				jsonObject.put("post_content",
+						html.xpath(String.format("//a[@href='%s']/text()", selectable.get())).get());
 
-				// 链接
-				post.setPosturl(selectable.get());
-				// 标题
-				post.setTitle(html.xpath(String.format("//a[@href='%s']/text()", post.getPosturl())).get());
-				// 内容
-				/*
-				 * post.setContent(html.xpath(String.format(
-				 * "//div[@id='%s']/text()", "cnblogs_post_body")).get()
-				 * .substring(0, 200));
-				 */
-				post.setContent(html.xpath(String.format("//a[@href='%s']/text()", post.getPosturl())).get());
-				// 时间
-
-			/*	post.setPosted(
-						DateUtils.parseDate(html.xpath("//span[@id='post-date']/text()").get(), "yyyy-MM-dd HH:mm"));*/
 				List<Selectable> nodes = html.css("script:not([src])").nodes();
 				String blogname = "";
+				String cb_blogId = "";
+				String cb_entryId = "";
+				String cb_blogUserGuid = "";
+				String cb_entryCreatedDate = "";
 				for (Selectable node : nodes) {
-
 					if (node.get().contains("var currentBlogApp =")) {
 						blogname = node.xpath("script/html()").regex("var currentBlogApp = '.{1,20}',").get()
 								.replace("var currentBlogApp = '", "").replace("',", "");
-						user.setBlogname(blogname);
+
+						jsonObject.put("blog_name", blogname);
+						jsonObject.put("blog_homepage", String.format("http://www.cnblogs.com/%s/", blogname));
 					} else if (node.get().contains(",cb_blogId=")) {
-						String cb_blogId = node.xpath("script/html()").regex(",cb_blogId=[0-9]{1,20},").get()
-								.replace(",cb_blogId=", "").replace(",", "");
-						user.setBlogid(Integer.parseInt(cb_blogId));
-						String cb_entryId = node.xpath("script/html()").regex(",cb_entryId=.{1,20},").get()
-								.replace(",cb_entryId=", "").replace(",", "");
 
-						post.setId(Integer.parseInt(cb_entryId));
-						String cb_blogUserGuid = node.xpath("script/html()").regex(",cb_blogUserGuid='.{1,50}',").get()
+						cb_blogUserGuid = node.xpath("script/html()").regex(",cb_blogUserGuid='.{1,50}',").get()
 								.replace(",cb_blogUserGuid='", "").replace("',", "");
-						user.setId(cb_blogUserGuid);
-						String cb_entryCreatedDate = node.xpath("script/html()").regex(",cb_entryCreatedDate='.{1,20}'")
-								.get().replace(",cb_entryCreatedDate='", "").replace("'", "").trim();
-						post.setPosted(DateUtils.parseDate(cb_entryCreatedDate, "yyyy/MM/dd HH:mm:ss"));
-					}
 
+						jsonObject.put("bloguser_id", cb_blogUserGuid);
+
+						cb_blogId = node.xpath("script/html()").regex(",cb_blogId=[0-9]{1,20},").get()
+								.replace(",cb_blogId=", "").replace(",", "");
+
+						jsonObject.put("blog_id", cb_blogId);
+
+						cb_entryId = node.xpath("script/html()").regex(",cb_entryId=.{1,20},").get()
+								.replace(",cb_entryId=", "").replace(",", "");
+						jsonObject.put("post_id", cb_entryId);
+
+						cb_entryCreatedDate = node.xpath("script/html()").regex(",cb_entryCreatedDate='.{1,20}'").get()
+								.replace(",cb_entryCreatedDate='", "").replace("'", "").trim();
+
+						jsonObject.put("post_posted", DateUtils.parseDate(cb_entryCreatedDate, "yyyy/MM/dd HH:mm:ss"));
+					}
 				}
 
-				post.setUserid(user.getId());
-
-				user.setHomepage(String.format("http://www.cnblogs.com/%s/", blogname));
-
 				page.addTargetRequest(String.format("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=%s", blogname));
+				page.addTargetRequest(String.format(
+						"http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=%s&blogId=%s&postId=%s&_=%s",
+						blogname, cb_blogId, cb_entryId, String.valueOf(System.currentTimeMillis())));
+				page.addTargetRequest(String.format("http://www.cnblogs.com/%s/mvc/blog/sidecolumn.aspx?blogApp=%s",
+						blogname, blogname));
+				// http://www.cnblogs.com/post/prevnext?postId=5765624&blogId=84872&dateCreated=2016%2F8%2F12+16%3A53%3A00
+				page.addTargetRequest(
+						String.format("http://www.cnblogs.com/post/prevnext?postId=%s&blogId=%s&dateCreated=%s",
+								cb_entryId, cb_blogId, cb_entryCreatedDate));
 
-				// String nickName =
-				// html.xpath("//*[@id=\"profile_block\"]/a[1]/text()").get();
-				// // 设置昵称
-				// user.setNickname(nickName);
-				//
-				// String authorRegTime =
-				// html.xpath("//*[@id=\"profile_block\"]/a[2]/@title").get().replace("入园时间：",
-				// "")
-				// .trim();
-				//
-				// // 设置注册时间
-				// user.setRegtime(DateUtils.parseDate(authorRegTime,
-				// "yyyy-MM-dd"));
+				page.putField("data", jsonObject);
 
-				page.putField("user", user);
-				page.putField("post", post);
+			}
+			// http://www.cnblogs.com/post/prevnext?postId=5765624&blogId=84872&dateCreated=2016%2F8%2F12+16%3A53%3A00
+			// 获取上下文
+			else if (selectable.get().contains("http://www.cnblogs.com/post/prevnext?")) {
+				page.addTargetRequests(html.links().regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
+			}
+			// http://www.cnblogs.com/softidea/mvc/blog/sidecolumn.aspx?blogApp=softidea
+			// 获取侧边栏
+			else if (selectable.get().contains("/mvc/blog/sidecolumn.aspx?blogApp=")
+					&& selectable.get().contains("http://www.cnblogs.com/")) {
+				String blogname = selectable.get().split("=")[1].replace("blogApp=", "");
 
-			} else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=")) {
+				page.addTargetRequests(html.links()
+						.regex(String.format("http://www.cnblogs.com/%s/tag/[a-z 0-9 -]+/", blogname)).all());
+			} else if (selectable.regex("http://www.cnblogs.com/[a-z 0-9 -]+/tag/[a-z 0-9 -]+/").match()) {
+				page.addTargetRequests(
+						html.links().regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
+			}
+			// http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=%s
+			// 获取通知信息
+			else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=")) {
+				page.putField("pagetype", PageType.Detail_New);
+				JSONObject jsonObject = new JSONObject();
 				String blogname = selectable.get().replace("http://www.cnblogs.com/mvc/blog/news.aspx?blogApp=", "");
 				String nickname = html.$("#profile_block > a:nth-child(1)").xpath("a/text()").get();
 				String authorRegTime = html.$("#profile_block > a:nth-child(3)").xpath("a/@title").get()
 						.replace("入园时间：", "").trim();
-				User user=new User();
-				user.setId("-1");
-				user.setNickname(nickname);
-				user.setBlogname(blogname);
-				user.setRegtime(DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
-				page.putField("user", user);
-				System.out.println("nickname:" + nickname + " authorRegTime:" + authorRegTime);
+				jsonObject.put("blog_name", blogname);
+				jsonObject.put("bloguser_nickname", nickname);
+				jsonObject.put("bloguser_regtime", DateUtils.parseDate(authorRegTime, "yyyy-MM-dd"));
+				page.putField("data", jsonObject);
+
+			}
+			// http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=%s&blogId=%s&postId=%s&_=%s
+			// 获取分类信息
+			else if (selectable.get().contains("http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?")) {
+				page.putField("pagetype", PageType.Detail_TagAndCategory);
+				JSONObject jsonObject = new JSONObject();
+				String[] queryparas = selectable.get()
+						.replace("http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?", "").split("&");
+				for (String querypara : queryparas) {
+					if (querypara.contains("blogApp=")) {
+						String blogAppPara = querypara.replace("blogApp=", "");
+						jsonObject.put("blog_name", blogAppPara);
+
+					}
+					if (querypara.contains("blogId=")) {
+						String blogIdPara = querypara.replace("blogId=", "");
+						jsonObject.put("blog_id", blogIdPara);
+					}
+					if (querypara.contains("postId=")) {
+						String postIdPara = querypara.replace("postId=", "");
+						jsonObject.put("post_id", postIdPara);
+					}
+				}
+
+				String tags = pagejson.jsonPath("Tags").get();
+
+				if (tags.contains("标签:")) {
+					// 标签
+					JSONArray tagjsonArray = new JSONArray();
+					String[] tagArray = tags.replace("标签:", "").trim().split(",");
+					for (String tag : tagArray) {
+						Document doc = Jsoup.parse(tag);
+						String tagstr = doc.text().trim();
+						if (StringUtils.isEmpty(tagstr) || tagstr == null) {
+							continue;
+						}
+						tagjsonArray.add(tagstr);
+					}
+					jsonObject.put("post_tags", tagjsonArray);
+				}
+
+				String categories = pagejson.jsonPath("Categories").get();
+
+				if (categories.contains("分类: ")) {
+					String[] categoryArray = categories.replace("分类:", "").trim().split(",");
+					// 分类
+					JSONArray categoryjsonArray = new JSONArray();
+					for (String category : categoryArray) {
+						Document doc = Jsoup.parse(category);
+						String categorystr = doc.text().trim();
+						if (StringUtils.isEmpty(categorystr) || categorystr == null) {
+							continue;
+						}
+						categoryjsonArray.add(categorystr);
+					}
+					jsonObject.put("post_categories", categoryjsonArray);
+				}
+				page.putField("data", jsonObject);
 			}
 			// 符合
 			else {
 				Selectable selectablelinks = html.links();
-
 				page.addTargetRequests(
 						selectablelinks.regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").all());
 				page.addTargetRequests(selectablelinks.regex("http://www.cnblogs.com/sitehome/p/[0-9]{1,7}").all());
-
 			}
 
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -160,8 +231,10 @@ public class mySpider implements PageProcessor {
 			starttime = System.currentTimeMillis();
 
 			// System.setProperty("selenuim_config", "config.ini");
-			String phantomjsCommand = System.getProperty("user.dir")
-					+ "\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
+			/*
+			 * String phantomjsCommand = System.getProperty("user.dir") +
+			 * "\\src\\main\\resources\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
+			 */
 			Spider.create(new mySpider()).addUrl("http://www.cnblogs.com/").addPipeline(new DbPipeline())
 					.setScheduler(new QueueScheduler().setDuplicateRemover(new BloomFilterDuplicateRemover(100000)))
 					// .setDownloader(new

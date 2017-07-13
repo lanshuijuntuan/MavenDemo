@@ -3,28 +3,28 @@ package com.sdj.spider.models;
 import java.io.Serializable;
 
 public class Catolog implements Serializable {
-    private Integer id;
+    private String id;
 
-    private String userid;
+    private Integer blogid;
 
     private String name;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
-    public String getUserid() {
-        return userid;
+    public Integer getBlogid() {
+        return blogid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid == null ? null : userid.trim();
+    public void setBlogid(Integer blogid) {
+        this.blogid = blogid;
     }
 
     public String getName() {
