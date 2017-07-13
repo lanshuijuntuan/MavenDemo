@@ -1,15 +1,9 @@
 package com.sdj.rent.controllers;
 
-import java.io.Console;
-import java.io.File;
 import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.core.Controller;
-import com.jfinal.json.FastJson;
-import com.jfinal.json.Json;
 import com.jfinal.log.Log;
-import com.jfinal.upload.UploadFile;
 import com.sdj.rent.models.Users;
 import com.sdj.rent.models.VersionInfo;
 import com.sdj.rent.models.data.BankOffer;
