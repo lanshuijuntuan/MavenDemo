@@ -1,7 +1,6 @@
 package com.sdj.rent.models;
 
 import java.util.List;
-import java.util.Map;
 
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Model;

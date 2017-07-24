@@ -3,7 +3,6 @@ package com.sdj.rent.models;
 import java.util.List;
 
 import com.jfinal.log.Log;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 
 

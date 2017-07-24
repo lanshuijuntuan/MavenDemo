@@ -17,6 +17,7 @@ import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.template.Engine;
 import com.sdj.rent.controllers.IndexController;
 import com.sdj.rent.controllers.ProManagementController;
+import com.sdj.rent.controllers.StudentController;
 import com.sdj.rent.models.data._MappingKit;
 
 public class projectConfig extends JFinalConfig {
@@ -49,7 +50,7 @@ public class projectConfig extends JFinalConfig {
 	public void configRoute(Routes me) {
 		me.add("/", IndexController.class);
 		me.add("/ProManagement", ProManagementController.class);
-
+		me.add("/Student", StudentController.class);
 	}
 
 	@Override
