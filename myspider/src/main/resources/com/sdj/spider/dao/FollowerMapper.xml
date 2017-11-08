@@ -13,21 +13,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from follower
+    from blog_follower
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from follower
+    delete from blog_follower
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Follower" >
-    insert into follower (id, userid, followedid, 
+    insert into blog_follower (id, userid, followedid,
       followtime)
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{followedid,jdbcType=VARCHAR}, 
       #{followtime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Follower" >
-    insert into follower
+    insert into blog_follower
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -58,7 +58,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Follower" >
-    update follower
+    update blog_follower
     <set >
       <if test="userid != null" >
         userid = #{userid,jdbcType=VARCHAR},
@@ -73,7 +73,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Follower" >
-    update follower
+    update blog_follower
     set userid = #{userid,jdbcType=VARCHAR},
       followedid = #{followedid,jdbcType=VARCHAR},
       followtime = #{followtime,jdbcType=TIMESTAMP}

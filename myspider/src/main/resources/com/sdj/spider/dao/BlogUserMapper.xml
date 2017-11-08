@@ -15,7 +15,7 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from bloguser
+    from blog_user
     where id = #{id,jdbcType=VARCHAR}
   </select>
   
@@ -23,15 +23,15 @@
 	parameterType="java.lang.String">
 	select 
     <include refid="Base_Column_List" />
-    from bloguser
+    from blog_user
     where id in (select userid from blog where blogname= #{name,jdbcType=VARCHAR})
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from bloguser
+    delete from blog_user
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.BlogUser" >
-    insert into bloguser (id, nickname, regtime, 
+    insert into blog_user (id, nickname, regtime,
       integral, username, password
       )
     values (#{id,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{regtime,jdbcType=TIMESTAMP}, 
@@ -39,7 +39,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.BlogUser" >
-    insert into bloguser
+    insert into blog_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -82,7 +82,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.BlogUser" >
-    update bloguser
+    update blog_user
     <set >
       <if test="nickname != null" >
         nickname = #{nickname,jdbcType=VARCHAR},
@@ -103,7 +103,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.BlogUser" >
-    update bloguser
+    update blog_user
     set nickname = #{nickname,jdbcType=VARCHAR},
       regtime = #{regtime,jdbcType=TIMESTAMP},
       integral = #{integral,jdbcType=INTEGER},

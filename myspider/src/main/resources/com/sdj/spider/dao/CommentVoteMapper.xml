@@ -3,10 +3,10 @@
 <mapper namespace="com.sdj.spider.dao.CommentVoteMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.CommentVote" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="commentid" property="commentid" jdbcType="INTEGER" />
-    <result column="issupport" property="issupport" jdbcType="BIT" />
+    <result column="comment_id" property="commentid" jdbcType="INTEGER" />
+    <result column="is_support" property="issupport" jdbcType="BIT" />
     <result column="votetime" property="votetime" jdbcType="TIMESTAMP" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, commentid, issupport, votetime, userid
@@ -14,21 +14,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from commentvote
+    from blog_comment_vote
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from commentvote
+    delete from blog_comment_vote
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.CommentVote" >
-    insert into commentvote (id, commentid, issupport, 
+    insert into blog_comment_vote (id, commentid, issupport,
       votetime, userid)
     values (#{id,jdbcType=INTEGER}, #{commentid,jdbcType=INTEGER}, #{issupport,jdbcType=BIT}, 
       #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.CommentVote" >
-    insert into commentvote
+    insert into blog_comment_vote
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -65,7 +65,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.CommentVote" >
-    update commentvote
+    update blog_comment_vote
     <set >
       <if test="commentid != null" >
         commentid = #{commentid,jdbcType=INTEGER},
@@ -83,7 +83,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.CommentVote" >
-    update commentvote
+    update blog_comment_vote
     set commentid = #{commentid,jdbcType=INTEGER},
       issupport = #{issupport,jdbcType=BIT},
       votetime = #{votetime,jdbcType=TIMESTAMP},

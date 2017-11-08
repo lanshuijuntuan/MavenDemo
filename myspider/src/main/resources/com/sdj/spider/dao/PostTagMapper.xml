@@ -12,27 +12,27 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from posttag
+    from blog_post_tag
     where id = #{id,jdbcType=INTEGER}
   </select>
     <select id="selectByTagIdAndPostId" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from posttag
+    from blog_post_tag
     where tagid = #{0} and postid=#{1}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from posttag
+    delete from blog_post_tag
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.PostTag" >
-    insert into posttag (id, postid, tagid
+    insert into blog_post_tag (id, postid, tagid
       )
     values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{tagid,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.PostTag" >
-    insert into posttag
+    insert into blog_post_tag
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -57,7 +57,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.PostTag" >
-    update posttag
+    update blog_post_tag
     <set >
       <if test="postid != null" >
         postid = #{postid,jdbcType=INTEGER},
@@ -69,7 +69,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostTag" >
-    update posttag
+    update blog_post_tag
     set postid = #{postid,jdbcType=INTEGER},
       tagid = #{tagid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

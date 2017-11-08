@@ -13,21 +13,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from followee
+    from blog_followee
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from followee
+    delete from blog_followee
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Followee" >
-    insert into followee (id, userid, followeeid, 
+    insert into blog_followee (id, userid, followeeid,
       followeetime)
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{followeeid,jdbcType=VARCHAR}, 
       #{followeetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Followee" >
-    insert into followee
+    insert into blog_followee
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -58,7 +58,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Followee" >
-    update followee
+    update blog_followee
     <set >
       <if test="userid != null" >
         userid = #{userid,jdbcType=VARCHAR},
@@ -73,7 +73,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Followee" >
-    update followee
+    update blog_followee
     set userid = #{userid,jdbcType=VARCHAR},
       followeeid = #{followeeid,jdbcType=VARCHAR},
       followeetime = #{followeetime,jdbcType=TIMESTAMP}

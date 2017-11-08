@@ -14,21 +14,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from postviewer
+    from blog_post_viewer
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from postviewer
+    delete from blog_post_viewer
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.PostViewer" >
-    insert into postviewer (id, postid, userid, 
+    insert into blog_post_viewer (id, postid, userid,
       address, readertime)
     values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{readertime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.PostViewer" >
-    insert into postviewer
+    insert into blog_post_viewer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -65,7 +65,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.PostViewer" >
-    update postviewer
+    update blog_post_viewer
     <set >
       <if test="postid != null" >
         postid = #{postid,jdbcType=INTEGER},
@@ -83,7 +83,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostViewer" >
-    update postviewer
+    update blog_post_viewer
     set postid = #{postid,jdbcType=INTEGER},
       userid = #{userid,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},

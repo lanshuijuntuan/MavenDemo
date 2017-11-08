@@ -5,11 +5,11 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="blogname" property="blogname" jdbcType="VARCHAR" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
-    <result column="homepage" property="homepage" jdbcType="VARCHAR" />
+    <result column="user_id" property="userid" jdbcType="VARCHAR" />
+    <result column="home_page" property="homepage" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, blogname, sign, userid, homepage
+    id, blogname, sign, user_id, home_page
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,7 +23,7 @@
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Blog" >
     insert into blog (id, blogname, sign, 
-      userid, homepage)
+      user_id, home_page)
     values (#{id,jdbcType=INTEGER}, #{blogname,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
       #{userid,jdbcType=VARCHAR}, #{homepage,jdbcType=VARCHAR})
   </insert>
@@ -40,10 +40,10 @@
         sign,
       </if>
       <if test="userid != null" >
-        userid,
+        user_id,
       </if>
       <if test="homepage != null" >
-        homepage,
+        home_page,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -74,10 +74,10 @@
         sign = #{sign,jdbcType=VARCHAR},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+        user_id = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="homepage != null" >
-        homepage = #{homepage,jdbcType=VARCHAR},
+        home_page = #{homepage,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -86,8 +86,8 @@
     update blog
     set blogname = #{blogname,jdbcType=VARCHAR},
       sign = #{sign,jdbcType=VARCHAR},
-      userid = #{userid,jdbcType=VARCHAR},
-      homepage = #{homepage,jdbcType=VARCHAR}
+      user_id = #{userid,jdbcType=VARCHAR},
+      home_page = #{homepage,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

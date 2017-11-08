@@ -16,15 +16,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from post
+    from blog_post
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from post
+    delete from blog_post
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Post" >
-    insert into post (id, title, content, 
+    insert into blog_post (id, title, content,
       blogid, posted, catolog, 
       posturl)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
@@ -32,7 +32,7 @@
       #{posturl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sdj.spider.models.Post" >
-    insert into post
+    insert into blog_post
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -81,7 +81,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sdj.spider.models.Post" >
-    update post
+    update blog_post
     <set >
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
@@ -105,7 +105,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Post" >
-    update post
+    update blog_post
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       blogid = #{blogid,jdbcType=INTEGER},
