@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Post implements Serializable {
-    private Integer id;
+    private String id;
 
     private String title;
 
@@ -20,7 +20,7 @@ public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public class Post implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
-    public Integer getBlogid() {
+    public String getBlogid() {
         return blogid;
     }
 

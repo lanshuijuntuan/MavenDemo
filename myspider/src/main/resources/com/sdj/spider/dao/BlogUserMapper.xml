@@ -24,7 +24,7 @@
 	select 
     <include refid="Base_Column_List" />
     from blog_user
-    where id in (select userid from blog where blogname= #{name,jdbcType=VARCHAR})
+    where id in (select user_id from blog where blogname= #{name,jdbcType=VARCHAR})
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from blog_user

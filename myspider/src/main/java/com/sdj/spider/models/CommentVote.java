@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CommentVote implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer commentid;
 
@@ -16,19 +16,19 @@ public class CommentVote implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getCommentid() {
+    public String getCommentid() {
         return commentid;
     }
 
-    public void setCommentid(Integer commentid) {
+    public void setCommentid(String commentid) {
         this.commentid = commentid;
     }
 

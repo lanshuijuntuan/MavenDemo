@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Follower implements Serializable {
-    private Integer id;
+    private String id;
 
     private String userid;
 
@@ -14,7 +14,7 @@ public class Follower implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

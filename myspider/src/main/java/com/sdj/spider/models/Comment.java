@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Comment implements Serializable {
-    private Integer id;
+    private String id;
 
-    private Integer postid;
+    private String postid;
 
     private String userid;
 
@@ -14,23 +14,23 @@ public class Comment implements Serializable {
 
     private Date posted;
 
-    private Integer commentid;
+    private String commentid;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getPostid() {
+    public String getPostid() {
         return postid;
     }
 
-    public void setPostid(Integer postid) {
+    public void setPostid(String postid) {
         this.postid = postid;
     }
 
@@ -58,7 +58,7 @@ public class Comment implements Serializable {
         this.posted = posted;
     }
 
-    public Integer getCommentid() {
+    public String getCommentid() {
         return commentid;
     }
 

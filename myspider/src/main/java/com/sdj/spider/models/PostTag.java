@@ -3,27 +3,27 @@ package com.sdj.spider.models;
 import java.io.Serializable;
 
 public class PostTag implements Serializable {
-    private Integer id;
+    private String id;
 
-    private Integer postid;
+    private String postid;
 
     private String tagid;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getPostid() {
+    public String getPostid() {
         return postid;
     }
 
-    public void setPostid(Integer postid) {
+    public void setPostid(String postid) {
         this.postid = postid;
     }
 
