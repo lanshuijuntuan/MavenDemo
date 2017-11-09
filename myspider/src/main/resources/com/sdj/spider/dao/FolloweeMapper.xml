@@ -3,12 +3,12 @@
 <mapper namespace="com.sdj.spider.dao.FolloweeMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.Followee" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
-    <result column="followeeid" property="followeeid" jdbcType="VARCHAR" />
-    <result column="followeetime" property="followeetime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userid" jdbcType="VARCHAR" />
+    <result column="followee_id" property="followeeid" jdbcType="VARCHAR" />
+    <result column="followee_time" property="followeetime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userid, followeeid, followeetime
+    id, user_id, followee_id, followee_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -21,8 +21,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.Followee" >
-    insert into blog_followee (id, userid, followeeid,
-      followeetime)
+    insert into blog_followee (id, user_id, followee_id,
+      followee_time)
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{followeeid,jdbcType=VARCHAR}, 
       #{followeetime,jdbcType=TIMESTAMP})
   </insert>
@@ -33,10 +33,10 @@
         id,
       </if>
       <if test="userid != null" >
-        userid,
+        user_id,
       </if>
       <if test="followeeid != null" >
-        followeeid,
+        followee_id,
       </if>
       <if test="followeetime != null" >
         followeetime,
@@ -61,22 +61,22 @@
     update blog_followee
     <set >
       <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+        user_id = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="followeeid != null" >
-        followeeid = #{followeeid,jdbcType=VARCHAR},
+        followee_id = #{followeeid,jdbcType=VARCHAR},
       </if>
       <if test="followeetime != null" >
-        followeetime = #{followeetime,jdbcType=TIMESTAMP},
+        followee_time = #{followeetime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.Followee" >
     update blog_followee
-    set userid = #{userid,jdbcType=VARCHAR},
-      followeeid = #{followeeid,jdbcType=VARCHAR},
-      followeetime = #{followeetime,jdbcType=TIMESTAMP}
+    set user_id = #{userid,jdbcType=VARCHAR},
+      followee_id = #{followeeid,jdbcType=VARCHAR},
+      followee_time = #{followeetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

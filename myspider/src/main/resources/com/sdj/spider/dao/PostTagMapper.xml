@@ -3,11 +3,11 @@
 <mapper namespace="com.sdj.spider.dao.PostTagMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.PostTag" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="postid" property="postid" jdbcType="INTEGER" />
-    <result column="tagid" property="tagid" jdbcType="VARCHAR" />
+    <result column="post_id" property="postid" jdbcType="INTEGER" />
+    <result column="tag_id" property="tagid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, postid, tagid
+    id, post_id, tag_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,7 +26,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.PostTag" >
-    insert into blog_post_tag (id, postid, tagid
+    insert into blog_post_tag (id, post_id, tag_id
       )
     values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{tagid,jdbcType=VARCHAR}
       )
@@ -38,10 +38,10 @@
         id,
       </if>
       <if test="postid != null" >
-        postid,
+        post_id,
       </if>
       <if test="tagid != null" >
-        tagid,
+        tag_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -60,18 +60,18 @@
     update blog_post_tag
     <set >
       <if test="postid != null" >
-        postid = #{postid,jdbcType=INTEGER},
+        post_id = #{postid,jdbcType=INTEGER},
       </if>
       <if test="tagid != null" >
-        tagid = #{tagid,jdbcType=VARCHAR},
+        tag_id = #{tagid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostTag" >
     update blog_post_tag
-    set postid = #{postid,jdbcType=INTEGER},
-      tagid = #{tagid,jdbcType=VARCHAR}
+    set post_id = #{postid,jdbcType=INTEGER},
+      tag_id = #{tagid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

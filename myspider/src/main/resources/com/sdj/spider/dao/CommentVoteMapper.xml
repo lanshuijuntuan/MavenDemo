@@ -5,11 +5,11 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="comment_id" property="commentid" jdbcType="INTEGER" />
     <result column="is_support" property="issupport" jdbcType="BIT" />
-    <result column="votetime" property="votetime" jdbcType="TIMESTAMP" />
+    <result column="vote_time" property="votetime" jdbcType="TIMESTAMP" />
     <result column="user_id" property="userid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, commentid, issupport, votetime, userid
+    id, comment_id, is_support, vote_time, user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,8 +22,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.CommentVote" >
-    insert into blog_comment_vote (id, commentid, issupport,
-      votetime, userid)
+    insert into blog_comment_vote (id, comment_id, is_support,
+      vote_time, user_id)
     values (#{id,jdbcType=INTEGER}, #{commentid,jdbcType=INTEGER}, #{issupport,jdbcType=BIT}, 
       #{votetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR})
   </insert>
@@ -34,16 +34,16 @@
         id,
       </if>
       <if test="commentid != null" >
-        commentid,
+        comment_id,
       </if>
       <if test="issupport != null" >
-        issupport,
+        is_support,
       </if>
       <if test="votetime != null" >
-        votetime,
+        vote_time,
       </if>
       <if test="userid != null" >
-        userid,
+        user_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -68,26 +68,26 @@
     update blog_comment_vote
     <set >
       <if test="commentid != null" >
-        commentid = #{commentid,jdbcType=INTEGER},
+        comment_id = #{commentid,jdbcType=INTEGER},
       </if>
       <if test="issupport != null" >
-        issupport = #{issupport,jdbcType=BIT},
+        is_support = #{issupport,jdbcType=BIT},
       </if>
       <if test="votetime != null" >
-        votetime = #{votetime,jdbcType=TIMESTAMP},
+        vote_time = #{votetime,jdbcType=TIMESTAMP},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+        user_id = #{userid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.CommentVote" >
     update blog_comment_vote
-    set commentid = #{commentid,jdbcType=INTEGER},
-      issupport = #{issupport,jdbcType=BIT},
-      votetime = #{votetime,jdbcType=TIMESTAMP},
-      userid = #{userid,jdbcType=VARCHAR}
+    set comment_id = #{commentid,jdbcType=INTEGER},
+      is_support = #{issupport,jdbcType=BIT},
+      vote_time = #{votetime,jdbcType=TIMESTAMP},
+      user_id = #{userid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

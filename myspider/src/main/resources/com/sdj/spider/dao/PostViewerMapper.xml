@@ -3,13 +3,13 @@
 <mapper namespace="com.sdj.spider.dao.PostViewerMapper" >
   <resultMap id="BaseResultMap" type="com.sdj.spider.models.PostViewer" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="postid" property="postid" jdbcType="INTEGER" />
-    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="post_id" property="postid" jdbcType="INTEGER" />
+    <result column="user_id" property="userid" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="readertime" property="readertime" jdbcType="TIMESTAMP" />
+    <result column="read_time" property="readertime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, postid, userid, address, readertime
+    id, post_id, user_id, address, read_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,8 +22,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sdj.spider.models.PostViewer" >
-    insert into blog_post_viewer (id, postid, userid,
-      address, readertime)
+    insert into blog_post_viewer (id, post_id, user_id,
+      address, read_time)
     values (#{id,jdbcType=INTEGER}, #{postid,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{readertime,jdbcType=TIMESTAMP})
   </insert>
@@ -34,16 +34,16 @@
         id,
       </if>
       <if test="postid != null" >
-        postid,
+        post_id,
       </if>
       <if test="userid != null" >
-        userid,
+        user_id,
       </if>
       <if test="address != null" >
         address,
       </if>
       <if test="readertime != null" >
-        readertime,
+        read_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -68,26 +68,26 @@
     update blog_post_viewer
     <set >
       <if test="postid != null" >
-        postid = #{postid,jdbcType=INTEGER},
+        post_id = #{postid,jdbcType=INTEGER},
       </if>
       <if test="userid != null" >
-        userid = #{userid,jdbcType=VARCHAR},
+        user_id = #{userid,jdbcType=VARCHAR},
       </if>
       <if test="address != null" >
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="readertime != null" >
-        readertime = #{readertime,jdbcType=TIMESTAMP},
+        read_time = #{readertime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sdj.spider.models.PostViewer" >
     update blog_post_viewer
-    set postid = #{postid,jdbcType=INTEGER},
-      userid = #{userid,jdbcType=VARCHAR},
+    set post_id = #{postid,jdbcType=INTEGER},
+      user_id = #{userid,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      readertime = #{readertime,jdbcType=TIMESTAMP}
+      read_time = #{readertime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
